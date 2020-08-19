@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, memo, useRef} from 'react';
 import {View, Text, SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import styles from '../../styles/Styles';
 import {removeParagraphTag} from '../../helpers/HelperFunctions';
@@ -10,17 +10,13 @@ import FadeInView from '../../components/FadeInView';
 import Button from '../../components/Button';
 
 const StoryMain = () => {
-  const [blocks, setBlocks] = useState([]);
+  const [block, setBlock] = useState(data.blocks[0]);
   const [screenClicked, setScreenClicked] = useState(false);
-  const [ScrollViewTopFadeOut, setScrollViewTopFadeOut] = useState(false);
-
-  useEffect(() => {
-    //get data from json file and keep it in state
-    setBlocks(data.blocks);
-  }, [blocks]);
-
+  const [fadeOut, setFadeOut] = useState(false);
+  const scrollViewRef = useRef(null);
+  console.log('abc');
   /**
-   * On click of story screen display top back and bottom stylling buttons
+   * On click of story screen display top back and bottom styling buttons
    */
   const clickOnStory = () => {
     setScreenClicked(!screenClicked);
@@ -30,75 +26,88 @@ const StoryMain = () => {
    * Check if the scrolling reached end of content
    */
   const scrollViewEndIsReached = (event) => {
-    const paddingBottom = 30;
     return (
       event.nativeEvent.layoutMeasurement.height +
         event.nativeEvent.contentOffset.y >=
-      event.nativeEvent.contentSize.height - paddingBottom
+      event.nativeEvent.contentSize.height - 2
     );
   };
 
   /**
-   * display choice component when reached the end of content and fade scroll top
+   * split paragraphs from content of a block and return Text component
    */
-  const fadeOutScrollViewTop = () => {
-    setScrollViewTopFadeOut(true);
-  };
-  /**
-   * split content data by </p> and newline and convert it to Text, and contains choice section as well
-   */
-  const renderContent = (id) => {
-    return blocks.map((block, i) => {
-      const {content, choseOne, choseTwo} = block;
-
-      // display only the first block and exit on the second block
-      if (!id && i > 0) {
-        return false;
+  const splitContent = (contents) => {
+    return contents.map((item, index) => {
+      const {blockId} = item;
+      if (item) {
+        return (
+          <Text
+            key={`${blockId}-${index}`}
+            allowFontScaling={true}
+            style={[styles.paragraph]}
+            onPress={clickOnStory}
+            selectable={false}>
+            {entityDecode(removeParagraphTag(item))}
+          </Text>
+        );
       }
+    });
+  };
 
-      //if block id is available than search by block id @todo
+  /**
+   * set block according to choice id and scroll top
+   */
+  const renderChoiceContent = (id) => {
+    const b = data.blocks.filter((obj) => obj.blockId === id)[0];
+    setBlock(b);
+    setTimeout(() => {
+      scrollViewRef.current.scrollTo({
+        x: 0,
+        y: 0,
+        animated: true,
+      });
+    });
+  };
 
-      // split content paragraphs
-      let contents = content.split(/<\/p>\n/g);
+  /** render make choice section */
+  const renderMakeChoice = (item) => {
+    const {choseOne, choseTwo} = item;
 
-      /** custom styles */
-      const btnCustomStyles = {
-        borderRadius: 15,
-        padding: 30,
-      };
+    /** custom styles */
+    const btnCustomStyles = {
+      borderRadius: 15,
+      padding: 30,
+    };
 
+    const makeChoiceSectionStyle = {
+      borderTopWidth: 2,
+      borderTopColor: '#75B2B7',
+      borderTopStyle: 'dashed',
+      borderRadius: 1,
+    };
+
+    //if there are choices
+    if (
+      (choseOne.target && choseOne.text) ||
+      (choseTwo.target && choseTwo.text)
+    ) {
       return (
-        <React.Fragment key={`${i}`}>
-          {/*loop through the content paragraph in order to display content paragraphs in separate Text component*/}
-          {contents.map((item, index) => {
-            const {blockId} = item;
-            if (item) {
-              return (
-                <Text
-                  key={`${blockId}-${index}`}
-                  allowFontScaling={true}
-                  style={[styles.paragraph]}
-                  onPress={clickOnStory}
-                  selectable={false}>
-                  {entityDecode(removeParagraphTag(item))}
-                </Text>
-              );
-            }
-          })}
-          {/*Make choice section */}
-          <View
-            style={[
-              styles.flex1,
-              styles.w100,
-              styles.justifyContentCenter,
-              styles.alignItemCenter,
-              styles.flexDirectionColumn,
-              styles.pl10,
-              styles.pr10,
-            ]}>
-            <Text style={[styles.paragraph, styles.LoraBold]}>
-              {'Make a choice'}
-            </Text>
+        <View
+          style={[
+            styles.flex1,
+            styles.w100,
+            styles.justifyContentCenter,
+            styles.alignItemCenter,
+            styles.flexDirectionColumn,
+            styles.pl10,
+            styles.pr10,
+            styles.mt20,
+            makeChoiceSectionStyle,
+          ]}>
+          <Text style={[styles.paragraph, styles.LoraBold]}>
+            {'Make a choice'}
+          </Text>
+          {choseOne.target && choseOne.text ? (
             <Button
               label={choseOne.text}
               buttonStyle={[
@@ -110,8 +119,12 @@ const StoryMain = () => {
                 styles.alignItemCenter,
                 styles.w100,
               ]}
-              action={() => renderContent(choseOne.target)}
+              action={() => renderChoiceContent(choseOne.target)}
             />
+          ) : (
+            <React.Fragment />
+          )}
+          {choseTwo.target && choseTwo.text ? (
             <Button
               label={choseTwo.text}
               buttonStyle={[
@@ -123,11 +136,57 @@ const StoryMain = () => {
                 styles.alignItemCenter,
                 styles.w100,
               ]}
+              action={() => renderChoiceContent(choseTwo.target)}
             />
-          </View>
-        </React.Fragment>
+          ) : (
+            <React.Fragment />
+          )}
+        </View>
       );
-    });
+    } else {
+      // if nor choice than no choice section
+      return (
+        <StoryScreenOptions
+          css={[
+            styles.w100,
+            styles.greenBackground,
+            styles.justifyContentStart,
+            styles.alignItemCenter,
+            styles.flexDirectionRow,
+            storyOptionsHeaderCustomStyle,
+          ]}
+          position={'header'}
+        />
+      );
+    }
+  };
+
+  /**
+   * split content data by </p> and newline and convert it to Text, and contains choice section as well
+   */
+  const renderContent = (id) => {
+    const {content, blockId} = block;
+
+    let contents = [];
+
+    // when block id is not available than take the first block split content paragraphs
+    if (!id) {
+      contents = content.split(/<\/p>\n/g);
+    }
+
+    //if block id is available than search by block id
+    if (id && id === blockId) {
+      contents = content.split(/<\/p>\n/g);
+    }
+
+    return (
+      <React.Fragment>
+        {/*loop through the content paragraph in order to display content paragraphs in separate Text component*/}
+        {splitContent(contents)}
+        {/*Make choice section */}
+        {renderMakeChoice(block)}
+      </React.Fragment>
+    );
   };
 
   /*Story options screen header styles */
@@ -146,10 +205,10 @@ const StoryMain = () => {
   return (
     <React.Fragment>
       {/*Status bar is hidden in the screen*/}
-      <StatusBar showHideTransition={'slide'} hidden={true} />
+      <StatusBar hidden={true} />
 
       {/*Loop through the blocks state*/}
-      {blocks.length > 0 ? (
+      {block ? (
         <React.Fragment>
           {screenClicked ? (
             <StoryScreenOptions
@@ -170,18 +229,16 @@ const StoryMain = () => {
           {/*Loop through the blocks state*/}
           <SafeAreaView style={[styles.flex1, styles.whiteBackground]}>
             <ScrollView
+              ref={scrollViewRef}
               maximumZoomScale={5}
               minmumZoomScale={1}
               onScroll={(event) => {
                 /*handles scroll view bottom reached event*/
-
-                if (scrollViewEndIsReached(event)) {
-                  fadeOutScrollViewTop();
-                } else {
-                  setScrollViewTopFadeOut(false);
-                }
+                scrollViewEndIsReached(event)
+                  ? setFadeOut(true)
+                  : setFadeOut(false);
               }}
-              scrollEventThrottle={400}>
+              scrollEventThrottle={100}>
               <View style={[styles.flex1, styles.justifyContentStart]}>
                 {
                   /*render content paragraphs handler*/
@@ -191,7 +248,7 @@ const StoryMain = () => {
             </ScrollView>
             {
               /*display fade out effect on the top of scroll view*/
-              ScrollViewTopFadeOut ? (
+              fadeOut ? (
                 <FadeInView styles={[styles.fadeOut]}>
                   <View style={styles.overlay} />
                 </FadeInView>
@@ -226,4 +283,13 @@ const StoryMain = () => {
   );
 };
 
-export default StoryMain;
+// performance boost using memo
+const areEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.block === nextProps.block &&
+    prevProps.fadeOut === nextProps.fadeOut
+  );
+};
+const story = memo(StoryMain, areEqual);
+
+export default story;

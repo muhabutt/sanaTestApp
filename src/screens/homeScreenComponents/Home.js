@@ -30,7 +30,9 @@ const Home = () => {
             styles.whiteBackground,
           ]}>
           <Button
-            action={() => navigation.navigate('StoryMain')}
+            action={() => {
+              navigation.navigate('StoryMain');
+            }}
             labelStyle={[styles.btnText, styles.whiteColor, styles.p10]}
             label={'Read Stories'}
           />

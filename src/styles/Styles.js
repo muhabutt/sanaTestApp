@@ -71,7 +71,7 @@ export const base = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '100%',
-    height: 200,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.7,
