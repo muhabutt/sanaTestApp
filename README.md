@@ -37,6 +37,7 @@ Packages Used:
     "react-native-safe-area-context": "^3.1.4" => Requried for React Navigatoin,
     "react-native-screens": "^2.10.1" => Requried for React Navigatoin,
     "react-native-svg": "^12.1.0" => Requried for Font awsome,
+    "react-native-splash-screen": "^3.2.0", => Required for splash screen
 ````
 
 #Source Folder Structure
@@ -77,5 +78,16 @@ the application , reset meaning clear saved cache (Font size, layout changes, us
 
 16. src/Styles.js => Main Common styles for all devices, and other utilities such as paddings, margins, grid system, 
 flex, widths, and much more. This is like a small bootstrap framework.
+
+````
+
+#Singed apk.
+
+````
+Singed apk for the release can be found inside android/app/release/app-release.apk
+
+You can install the apk directly to mobile device or run below command 
+
+npx react-native run-android --variant=release
 
 ````
