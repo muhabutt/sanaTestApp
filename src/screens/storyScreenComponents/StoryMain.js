@@ -14,7 +14,7 @@ const StoryMain = () => {
   const [screenClicked, setScreenClicked] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const scrollViewRef = useRef(null);
-  console.log('abc');
+
   /**
    * On click of story screen display top back and bottom styling buttons
    */
@@ -80,10 +80,8 @@ const StoryMain = () => {
     };
 
     const makeChoiceSectionStyle = {
-      borderTopWidth: 2,
+      borderTopWidth: 1,
       borderTopColor: '#75B2B7',
-      borderTopStyle: 'dashed',
-      borderRadius: 1,
     };
 
     //if there are choices
@@ -113,7 +111,6 @@ const StoryMain = () => {
               buttonStyle={[
                 styles.lightGreenBackground,
                 btnCustomStyles,
-                styles.borderWhite,
                 styles.m10,
                 styles.justifyContentCenter,
                 styles.alignItemCenter,
@@ -130,7 +127,6 @@ const StoryMain = () => {
               buttonStyle={[
                 styles.lightGreenBackground,
                 btnCustomStyles,
-                styles.borderWhite,
                 styles.m10,
                 styles.justifyContentCenter,
                 styles.alignItemCenter,
@@ -156,6 +152,7 @@ const StoryMain = () => {
             storyOptionsHeaderCustomStyle,
           ]}
           position={'header'}
+          title={'Read more'}
         />
       );
     }

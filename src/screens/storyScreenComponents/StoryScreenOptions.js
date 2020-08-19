@@ -2,12 +2,12 @@ import React from 'react';
 import styles from '../../styles/Styles';
 import IosBackButton from '../../components/ios/IosBackButton';
 import AndroidBackButton from '../../components/android/AndroidBackButton';
-import {Platform, View, ImageBackground, Alert} from 'react-native';
+import {Platform, View, ImageBackground, Alert, Text} from 'react-native';
 import PropTypes from 'prop-types';
 import Button from '../../components/Button';
 
 // create a component
-const StoryScreenOptions = ({css, position}) => {
+const StoryScreenOptions = ({css, position, title}) => {
   //Check if platform is ios or android
   const platform = Platform.OS === 'ios' ? 'ios' : 'android';
   //Header banner image
@@ -36,12 +36,43 @@ const StoryScreenOptions = ({css, position}) => {
         platform === 'ios' ? (
           <React.Fragment>
             <ImageBackground source={image} style={styles.bannerImage}>
-              <IosBackButton />
+              <View
+                style={[styles.flexDirectionRow, styles.justifyContentStart]}>
+                {/*back button for the bar*/}
+                <View style={[styles.floatLeft]}>
+                  <IosBackButton />
+                </View>
+                {/*title for the bar*/}
+                {title ? (
+                  <View style={[styles.flex2]}>
+                    <Text style={[styles.heading, styles.whiteColor]}>
+                      {title}
+                    </Text>
+                  </View>
+                ) : (
+                  <React.Fragment />
+                )}
+              </View>
             </ImageBackground>
           </React.Fragment>
         ) : (
           <ImageBackground source={image} style={styles.bannerImage}>
-            <AndroidBackButton />
+            <View style={[styles.flexDirectionRow, styles.justifyContentStart]}>
+              {/*back button for the bar*/}
+              <View style={[styles.floatLeft]}>
+                <AndroidBackButton />
+              </View>
+              {/*title for the bar*/}
+              {title ? (
+                <View style={[styles.flex2]}>
+                  <Text style={[styles.heading, styles.whiteColor]}>
+                    {title}
+                  </Text>
+                </View>
+              ) : (
+                <React.Fragment />
+              )}
+            </View>
           </ImageBackground>
         )
       ) : (
@@ -95,6 +126,7 @@ const StoryScreenOptions = ({css, position}) => {
 StoryScreenOptions.propTypes = {
   css: PropTypes.array,
   position: PropTypes.string,
+  title: PropTypes.string,
 };
 
 export default StoryScreenOptions;
