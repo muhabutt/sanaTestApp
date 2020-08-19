@@ -76,7 +76,7 @@ const StoryMain = () => {
     /** custom styles */
     const btnCustomStyles = {
       borderRadius: 15,
-      padding: 30,
+      padding: 25,
     };
 
     const makeChoiceSectionStyle = {
@@ -99,10 +99,9 @@ const StoryMain = () => {
             styles.flexDirectionColumn,
             styles.pl10,
             styles.pr10,
-            styles.mt20,
             makeChoiceSectionStyle,
           ]}>
-          <Text style={[styles.paragraph, styles.LoraBold]}>
+          <Text style={[styles.font20, styles.LoraBold, styles.m10]}>
             {'Make a choice'}
           </Text>
           {choseOne.target && choseOne.text ? (
@@ -199,6 +198,11 @@ const StoryMain = () => {
     height: 80,
   };
 
+  /*SafeAreaView styles */
+  const safeAreaViewCustomStyle = {
+    paddingVertical: 25,
+  };
+
   return (
     <React.Fragment>
       {/*Status bar is hidden in the screen*/}
@@ -224,13 +228,18 @@ const StoryMain = () => {
           )}
 
           {/*Loop through the blocks state*/}
-          <SafeAreaView style={[styles.flex1, styles.whiteBackground]}>
+          <SafeAreaView
+            style={[
+              styles.flex1,
+              styles.whiteBackground,
+              safeAreaViewCustomStyle,
+            ]}>
             <ScrollView
               ref={scrollViewRef}
               maximumZoomScale={5}
               minmumZoomScale={1}
               onScroll={(event) => {
-                /*handles scroll view bottom reached event*/
+                /*handles scroll view bottom reached event and if scrollview height + contentOffset.y is greater than the height*/
                 scrollViewEndIsReached(event)
                   ? setFadeOut(true)
                   : setFadeOut(false);
