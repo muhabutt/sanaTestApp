@@ -1,11 +1,11 @@
-//import liraries
+//import libraries
 import React from 'react';
 import {View, Text, StatusBar} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import styles from '../styles/styles';
-import FadeInView from '../components/FadeInView';
+import styles from '../../styles/Styles';
+import FadeInView from '../../components/FadeInView';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Button from '../components/Button';
+import Button from '../../components/Button';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -17,7 +17,7 @@ const Home = () => {
         Sana Test App
       </Text>
       <FadeInView
-        style={[
+        styles={[
           styles.flex1,
           styles.justifyContentCenter,
           styles.whiteBackground,
@@ -31,12 +31,7 @@ const Home = () => {
           ]}>
           <Button
             action={() => navigation.navigate('StoryMain')}
-            labelStyle={[
-              styles.btnText,
-              styles.font20,
-              styles.whiteColor,
-              styles.p10,
-            ]}
+            labelStyle={[styles.btnText, styles.whiteColor, styles.p10]}
             label={'Read Stories'}
           />
         </View>

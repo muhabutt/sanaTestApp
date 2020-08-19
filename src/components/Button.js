@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Text, TouchableOpacity} from 'react-native';
-import styles from '../styles/styles';
+import styles from '../styles/Styles';
 
 // create a component
 const Button = ({label, action, buttonStyle, labelStyle}) => {

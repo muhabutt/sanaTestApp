@@ -1,24 +1,23 @@
 /**
  * Styles specifically for Android
  */
-import {StyleSheet, Dimensions} from 'react-native';
-let {width} = Dimensions.get('window');
+import {StyleSheet} from 'react-native';
 
 export const base = StyleSheet.create({
   heading: {
-    fontSize: width * 0.06,
+    fontSize: 23,
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Lora-Bold',
   },
   paragraph: {
-    fontSize: width * 0.05,
+    fontSize: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
     fontFamily: 'Lora-Regular',
   },
   btnText: {
-    fontSize: width * 0.05,
+    fontSize: 20,
     fontFamily: 'Lora-Bold',
     color: '#ffffff',
     textAlign: 'center',

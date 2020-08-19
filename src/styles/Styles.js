@@ -1,14 +1,13 @@
-import {Platform, StyleSheet, Dimensions} from 'react-native';
-let {height} = Dimensions.get('window');
-import {androidStyles} from './androidStyles';
-import {iosStyles} from './iosStyles';
+import {Platform, StyleSheet} from 'react-native';
+import {androidStyles} from './AndroidStyles';
+import {iosStyles} from './IosStyles';
 
 // common styles
 export const base = StyleSheet.create({
   selfAlignCenter: {
     alignSelf: 'center',
   },
-  flexDirectionColumn : {
+  flexDirectionColumn: {
     flexDirection: 'column',
   },
   justifyContentCenter: {
@@ -97,64 +96,64 @@ export const utilities = StyleSheet.create({
     marginRight: -20,
   },
   m10: {
-    margin: height * 0.01,
+    margin: 10,
   },
   m20: {
-    margin: height * 0.02,
+    margin: 20,
   },
   p10: {
-    padding: height * 0.01,
+    padding: 10,
   },
   p20: {
-    padding: height * 0.02,
+    padding: 20,
   },
   mt10: {
-    marginTop: height * 0.01,
+    marginTop: 10,
   },
   mt20: {
-    marginTop: height * 0.02,
+    marginTop: 20,
   },
   mb10: {
-    marginBottom: height * 0.01,
+    marginBottom: 10,
   },
   mb20: {
-    marginBottom: height * 0.02,
+    marginBottom: 20,
   },
   ml10: {
-    marginLeft: height * 0.01,
+    marginLeft: 10,
   },
   ml20: {
-    marginLeft: height * 0.02,
+    marginLeft: 20,
   },
   mR10: {
-    marginRight: height * 0.01,
+    marginRight: 10,
   },
   mR20: {
-    marginRight: height * 0.02,
+    marginRight: 20,
   },
   pt10: {
-    paddingTop: height * 0.01,
+    paddingTop: 10,
   },
   pt20: {
-    paddingTop: height * 0.2,
+    paddingTop: 20,
   },
   pb10: {
-    paddingBottom: height * 0.01,
+    paddingBottom: 10,
   },
   pb20: {
-    paddingBottom: height * 0.02,
+    paddingBottom: 20,
   },
   pl10: {
-    paddingLeft: height * 0.01,
+    paddingLeft: 10,
   },
   pl20: {
-    paddingLeft: height * 0.02,
+    paddingLeft: 20,
   },
   pr10: {
-    paddingRight: height * 0.01,
+    paddingRight: 10,
   },
   pr20: {
-    paddingRight: height * 0.02,
+    paddingRight: 20,
   },
 });
 export const fontFamily = StyleSheet.create({

@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, SafeAreaView, ScrollView, StatusBar} from 'react-native';
-import styles from '../styles/styles';
-import {removeParagraphTag} from '../helpers/helperFunctions';
-import {entityDecode} from '../helpers/HtmlEntities';
-import data from '../json/TheHouseofPleasures.json';
-import Loader from '../components/Loader';
-import StoryScreenOptions from '../components/StoryScreenOptions';
-import FadeInView from '../components/FadeInView';
-import Button from '../components/Button';
+import styles from '../../styles/Styles';
+import {removeParagraphTag} from '../../helpers/HelperFunctions';
+import {entityDecode} from '../../helpers/HtmlEntities';
+import data from '../../json/TheHouseofPleasures.json';
+import Loader from '../../components/Loader';
+import StoryScreenOptions from './StoryScreenOptions';
+import FadeInView from '../../components/FadeInView';
+import Button from '../../components/Button';
 
 const StoryMain = () => {
   const [blocks, setBlocks] = useState([]);
@@ -30,7 +30,7 @@ const StoryMain = () => {
    * Check if the scrolling reached end of content
    */
   const scrollViewEndIsReached = (event) => {
-    const paddingBottom = 20;
+    const paddingBottom = 30;
     return (
       event.nativeEvent.layoutMeasurement.height +
         event.nativeEvent.contentOffset.y >=
@@ -49,24 +49,33 @@ const StoryMain = () => {
    */
   const renderContent = (id) => {
     return blocks.map((block, i) => {
+      const {content, choseOne, choseTwo} = block;
+
       // display only the first block and exit on the second block
       if (!id && i > 0) {
         return false;
       }
 
-      //if block id is avaialble than search by block id @todo
+      //if block id is available than search by block id @todo
 
       // split content paragraphs
-      let content = block.content.split(/<\/p>\n/g);
+      let contents = content.split(/<\/p>\n/g);
+
+      /** custom styles */
+      const btnCustomStyles = {
+        borderRadius: 15,
+        padding: 30,
+      };
 
       return (
         <React.Fragment key={`${i}`}>
           {/*loop through the content paragraph in order to display content paragraphs in separate Text component*/}
-          {content.map((item, index) => {
+          {contents.map((item, index) => {
+            const {blockId} = item;
             if (item) {
               return (
                 <Text
-                  key={`${item.blockId}-${index}`}
+                  key={`${blockId}-${index}`}
                   allowFontScaling={true}
                   style={[styles.paragraph]}
                   onPress={clickOnStory}
@@ -84,34 +93,30 @@ const StoryMain = () => {
               styles.justifyContentCenter,
               styles.alignItemCenter,
               styles.flexDirectionColumn,
+              styles.pl10,
+              styles.pr10,
             ]}>
             <Text style={[styles.paragraph, styles.LoraBold]}>
               {'Make a choice'}
             </Text>
             <Button
-              label={block.choseOne.text}
+              label={choseOne.text}
               buttonStyle={[
                 styles.lightGreenBackground,
-                {
-                  borderRadius: 15,
-                  padding: 30,
-                },
+                btnCustomStyles,
                 styles.borderWhite,
                 styles.m10,
                 styles.justifyContentCenter,
                 styles.alignItemCenter,
                 styles.w100,
               ]}
-              action={() => renderContent(block.choseOne.target)}
+              action={() => renderContent(choseOne.target)}
             />
             <Button
-              label={block.choseTwo.text}
+              label={choseTwo.text}
               buttonStyle={[
                 styles.lightGreenBackground,
-                {
-                  borderRadius: 15,
-                  padding: 30,
-                },
+                btnCustomStyles,
                 styles.borderWhite,
                 styles.m10,
                 styles.justifyContentCenter,
@@ -123,6 +128,19 @@ const StoryMain = () => {
         </React.Fragment>
       );
     });
+  };
+
+  /*Story options screen header styles */
+  const storyOptionsFooterCustomStyle = {
+    height: 120,
+    borderTopColor: '#333',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+  };
+
+  /*Story options screen footer styles */
+  const storyOptionsHeaderCustomStyle = {
+    height: 80,
   };
 
   return (
@@ -141,9 +159,7 @@ const StoryMain = () => {
                 styles.justifyContentStart,
                 styles.alignItemCenter,
                 styles.flexDirectionRow,
-                {
-                  height: '10%',
-                },
+                storyOptionsHeaderCustomStyle,
               ]}
               position={'header'}
             />
@@ -176,7 +192,7 @@ const StoryMain = () => {
             {
               /*display fade out effect on the top of scroll view*/
               ScrollViewTopFadeOut ? (
-                <FadeInView style={styles.fadeOut}>
+                <FadeInView styles={[styles.fadeOut]}>
                   <View style={styles.overlay} />
                 </FadeInView>
               ) : (
@@ -194,11 +210,7 @@ const StoryMain = () => {
                   styles.justifyContentStart,
                   styles.alignItemCenter,
                   styles.flexDirectionRow,
-                  {
-                    height: '12%',
-                    borderTopColor: '#333',
-                    borderTopWidth: 1,
-                  },
+                  storyOptionsFooterCustomStyle,
                 ]}
                 position={'footer'}
               />
@@ -213,8 +225,5 @@ const StoryMain = () => {
     </React.Fragment>
   );
 };
-
-//currently no propTypes
-StoryMain.propTypes = {};
 
 export default StoryMain;

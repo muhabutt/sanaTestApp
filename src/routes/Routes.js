@@ -2,9 +2,9 @@ import * as React from 'react';
 import {View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import styles from '../styles/styles';
-import StoryMain from '../screens/StoryMain';
-import Home from '../screens/Home';
+import styles from '../styles/Styles';
+import StoryMain from '../screens/storyScreenComponents/StoryMain';
+import Home from '../screens/homeScreenComponents/Home';
 
 const Stack = createStackNavigator();
 

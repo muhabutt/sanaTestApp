@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import styles from '../../styles/styles';
+import styles from '../../styles/Styles';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowAltCircleLeft} from '@fortawesome/free-solid-svg-icons';
 

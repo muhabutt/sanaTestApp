@@ -1,16 +1,23 @@
 import React from 'react';
-import styles from '../styles/styles';
-import IosBackButton from './ios/IosBackButton';
-import AndroidBackButton from './android/AndroidBackButton';
+import styles from '../../styles/Styles';
+import IosBackButton from '../../components/ios/IosBackButton';
+import AndroidBackButton from '../../components/android/AndroidBackButton';
 import {Platform, View, ImageBackground, Alert} from 'react-native';
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../../components/Button';
 
 // create a component
 const StoryScreenOptions = ({css, position}) => {
   //Check if platform is ios or android
   const platform = Platform.OS === 'ios' ? 'ios' : 'android';
-  const image = require('../../assets/images/banner.png');
+  //Header banner image
+  const image = require('../../../assets/images/banner.png');
+
+  // custom styles for the header section of option screen
+  const storyOptionsHeaderCustomStyles = {
+    height: '20%',
+  };
+
   return (
     <View
       style={
@@ -22,9 +29,7 @@ const StoryScreenOptions = ({css, position}) => {
               styles.justifyContentStart,
               styles.alignItemCenter,
               styles.flexDirectionRow,
-              {
-                height: '10%',
-              },
+              storyOptionsHeaderCustomStyles,
             ]
       }>
       {position === 'header' ? (
@@ -68,7 +73,14 @@ const StoryScreenOptions = ({css, position}) => {
                 Alert.alert(
                   'Reset options',
                   'Button reset clicked',
-                  [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  ],
                   {cancelable: false},
                 );
               }}

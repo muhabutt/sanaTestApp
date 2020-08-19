@@ -1,6 +1,7 @@
 /**
  * Author : mdevils / html-entities
- * description: Updated the file into js format, and for the need of react-native apps
+ * description: Updated the file into js format, and for the need of react-native apps, this small library is used to
+ * decode html entities in to text
  * Edited: Muhammad Kashif Zahid Butt
  */
 const ENTITIES = [
@@ -2135,6 +2136,11 @@ const charIndex = {};
 
 createIndexes(alphaIndex, charIndex);
 
+/**
+ * Decode html entities in to text
+ * @param str
+ * @returns {string}
+ */
 export const entityDecode = (str) => {
   if (!str || !str.length) {
     return '';
@@ -2145,7 +2151,8 @@ export const entityDecode = (str) => {
       const code =
         entity.charAt(1) === 'x'
           ? parseInt(entity.substr(2).toLowerCase(), 16)
-          : parseInt(entity.substr(1));
+          : // eslint-disable-next-line radix
+            parseInt(entity.substr(1));
 
       if (!(isNaN(code) || code < -32768 || code > 65535)) {
         chr = String.fromCharCode(code);
