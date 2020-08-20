@@ -10,6 +10,9 @@ export const base = StyleSheet.create({
   flexDirectionColumn: {
     flexDirection: 'column',
   },
+  justifyContentSpaceBetween: {
+    justifyContent: 'space-between',
+  },
   justifyContentCenter: {
     justifyContent: 'center',
   },
@@ -71,11 +74,10 @@ export const base = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '100%',
-    height: 100,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.7,
-    padding: 10,
     backgroundColor: '#ffffff',
   },
   opacity1: {
@@ -223,6 +225,9 @@ export const grid = StyleSheet.create({
   },
   flex3: {
     flex: 3.1,
+  },
+  flexGrow1: {
+    flexGrow: 1,
   },
   w100: {
     width: '100%',

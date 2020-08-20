@@ -1,5 +1,12 @@
 import React, {useState, memo, useRef} from 'react';
-import {View, Text, SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
 import styles from '../../styles/Styles';
 import {removeParagraphTag} from '../../helpers/HelperFunctions';
 import {entityDecode} from '../../helpers/HtmlEntities';
@@ -8,12 +15,21 @@ import Loader from '../../components/Loader';
 import StoryScreenOptions from './StoryScreenOptions';
 import FadeInView from '../../components/FadeInView';
 import Button from '../../components/Button';
+const {height} = Dimensions.get('window');
 
 const StoryMain = () => {
   const [block, setBlock] = useState(data.blocks[0]);
   const [screenClicked, setScreenClicked] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [screenHeight, setScreenHeight] = useState(0);
   const scrollViewRef = useRef(null);
+  const scrollEnabled = screenHeight > height;
+
+  //handle screen size change
+  const onContentSizeChange = (contentWidth, contentHeight) => {
+    // Save the content height in state
+    setScreenHeight(contentHeight);
+  };
 
   /**
    * On click of story screen display top back and bottom styling buttons
@@ -61,11 +77,14 @@ const StoryMain = () => {
     const b = data.blocks.filter((obj) => obj.blockId === id)[0];
     setBlock(b);
     setTimeout(() => {
-      scrollViewRef.current.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true,
-      });
+      scrollViewRef.current.scrollTo(
+        {
+          x: 0,
+          y: 0,
+          animated: true,
+        },
+        3000,
+      );
     });
   };
 
@@ -198,9 +217,11 @@ const StoryMain = () => {
     height: 80,
   };
 
-  /*SafeAreaView styles */
-  const safeAreaViewCustomStyle = {
-    paddingVertical: 25,
+  /**Custom content section styles **/
+  const customContentStyles = {
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingBottom: 50,
   };
 
   return (
@@ -228,16 +249,15 @@ const StoryMain = () => {
           )}
 
           {/*Loop through the blocks state*/}
-          <SafeAreaView
-            style={[
-              styles.flex1,
-              styles.whiteBackground,
-              safeAreaViewCustomStyle,
-            ]}>
+          <SafeAreaView style={[styles.flex1, styles.whiteBackground]}>
             <ScrollView
+              style={[styles.flex1]}
+              contentContainerstyle={[styles.flex1]}
               ref={scrollViewRef}
               maximumZoomScale={5}
               minmumZoomScale={1}
+              scrollEnabled={scrollEnabled}
+              onContentSizeChange={onContentSizeChange}
               onScroll={(event) => {
                 /*handles scroll view bottom reached event and if scrollview height + contentOffset.y is greater than the height*/
                 scrollViewEndIsReached(event)
@@ -245,7 +265,7 @@ const StoryMain = () => {
                   : setFadeOut(false);
               }}
               scrollEventThrottle={100}>
-              <View style={[styles.flex1, styles.justifyContentStart]}>
+              <View style={[styles.flex1, customContentStyles]}>
                 {
                   /*render content paragraphs handler*/
                   renderContent()
